@@ -12,6 +12,7 @@ import Type from 'rsg-components/Type';
 import Text from 'rsg-components/Text';
 import Para from 'rsg-components/Para';
 import Table from 'rsg-components/Table';
+import Shape from 'rsg-components/Shape';
 import { unquote, getType, showSpaces } from './util';
 
 function renderType(type) {
@@ -85,19 +86,16 @@ function renderShape(props, level = 0) {
 		const defaultValue = renderDefault(prop);
 		const description = prop.description;
 		rows.push(
-			<div
-				key={name}
-				style={{
-					paddingLeft: 30 * level + 'px',
-				}}
-			>
-				<Name>{name}</Name>
-				{': '}
-				<Type>{renderType(prop)}</Type>
-				{defaultValue && ' — '}
-				{defaultValue}
-				{description && ' — '}
-				{description && <Markdown text={description} inline />}
+			<div key={name}>
+				<Shape level={level}>
+					<Name>{name}</Name>
+					{': '}
+					<Type>{renderType(prop)}</Type>
+					{defaultValue && ' — '}
+					{defaultValue}
+					{description && ' — '}
+					{description && <Markdown text={description} inline />}
+				</Shape>
 			</div>
 		);
 		rows = [...rows, renderExtra({ type: prop }, level + 1)];
@@ -258,9 +256,11 @@ export const columns = [
 	},
 ];
 
-export default function PropsRenderer({ props }) {
+export function PropsRenderer({ props }) {
 	return <Table columns={columns} rows={props} getRowKey={getRowKey} />;
 }
+
+export default PropsRenderer;
 
 PropsRenderer.propTypes = {
 	props: PropTypes.array.isRequired,
